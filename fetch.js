@@ -9,13 +9,11 @@ const USE_GITHUB_DATA = process.env.USE_GITHUB_DATA;
 const MEDIUM_USERNAME = process.env.MEDIUM_USERNAME;
 
 const ERR = {
-  noUserName:
-    "Github Username was found to be undefined. Please set all relevant environment variables.",
-  requestFailed:
-    "The request to GitHub didn't succeed. Check if GitHub token in your .env file is correct.",
-  requestFailedMedium:
-    "The request to Medium didn't succeed. Check if Medium username in your .env file is correct."
+  noUserName: "Github Username was found to be undefined. Please set all relevant environment variables.",
+  requestFailed: "The request to GitHub didn't succeed. Check if GitHub token in your .env file is correct.",
+  requestFailedMedium: "The request to Medium didn't succeed. Check if Medium username in your .env file is correct."
 };
+
 if (USE_GITHUB_DATA === "true") {
   if (GITHUB_USERNAME === undefined) {
     throw new Error(ERR.noUserName);
@@ -56,6 +54,7 @@ if (USE_GITHUB_DATA === "true") {
 }
 `
   });
+
   const default_options = {
     hostname: "api.github.com",
     path: "/graphql",
@@ -72,7 +71,8 @@ if (USE_GITHUB_DATA === "true") {
 
     console.log(`statusCode: ${res.statusCode}`);
     if (res.statusCode !== 200) {
-      throw new Error(ERR.requestFailed);
+      console.error(ERR.requestFailed);
+      return;
     }
 
     res.on("data", d => {
@@ -87,7 +87,7 @@ if (USE_GITHUB_DATA === "true") {
   });
 
   req.on("error", error => {
-    throw error;
+    console.error(`Error fetching GitHub data: ${error.message}`);
   });
 
   req.write(data);
@@ -108,7 +108,8 @@ if (MEDIUM_USERNAME !== undefined) {
 
     console.log(`statusCode: ${res.statusCode}`);
     if (res.statusCode !== 200) {
-      throw new Error(ERR.requestMediumFailed);
+      console.error(ERR.requestFailedMedium);
+      return;
     }
 
     res.on("data", d => {
@@ -123,7 +124,7 @@ if (MEDIUM_USERNAME !== undefined) {
   });
 
   req.on("error", error => {
-    throw error;
+    console.error(`Error fetching Medium data: ${error.message}`);
   });
 
   req.end();
