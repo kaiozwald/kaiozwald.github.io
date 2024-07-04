@@ -948,7 +948,7 @@ main {
 .project-img {
   position: relative;
   width: 100%;
-  height: 200px; /* Set the height as needed */
+  height: 100%; /* Set the height as needed */
   border-radius: 16px;
   overflow: hidden;
   margin-bottom: 15px;
